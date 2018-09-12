@@ -38,10 +38,10 @@ public class MainClass
         
         try
         {
-            CsvWindupExportLoader loader1 = new CsvWindupExportLoader(new URL(csvCompareOptions.getOldFile()), csvCompareOptions.getDelimiter());
-            CsvWindupExportLoader loader2 = new CsvWindupExportLoader(new URL(csvCompareOptions.getNewFile()), csvCompareOptions.getDelimiter());
+            CsvWindupExportLoader loader1 = new CsvWindupExportLoader(new URL("file://"+csvCompareOptions.getOldFile()), csvCompareOptions.getDelimiter());
+            CsvWindupExportLoader loader2 = new CsvWindupExportLoader(new URL("file://"+csvCompareOptions.getNewFile()), csvCompareOptions.getDelimiter());
             WindupReportComparison reportCmp = new WindupReportComparison(loader1.parseCSV(), loader2.parseCSV());
-            List<ReportModel> listDiff = null;
+            List<String[]> listDiff = null;
             if ( csvCompareOptions.isExportedBothDifferences() ) {
                 listDiff =reportCmp.compareNewAndOldReportsWithDiffLines();
             } else {
@@ -50,7 +50,7 @@ public class MainClass
             
             if (listDiff != null && listDiff.size()> 0) {
                 logger.debug(listDiff);
-                (new ExportReportModelToCSV(listDiff)).export(new File("diff.csv"));
+                (new ExportReportModelToCSV(listDiff)).export(new File("/home/ajaygeorge/Desktop/diff.csv"));
                 System.exit(1);
             } else {
                 System.exit(0);

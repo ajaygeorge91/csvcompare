@@ -22,9 +22,9 @@ public class ExportReportModelToCSV
 {
     public static final Logger logger = LogManager.getLogger(ExportReportModelToCSV.class);
     
-    private List<ReportModel>  result; 
+    private List<String[]>  result;
     
-    public ExportReportModelToCSV(List<ReportModel> listOfLines) {
+    public ExportReportModelToCSV(List<String[]> listOfLines) {
         this.result = listOfLines;
     }
     
@@ -38,10 +38,7 @@ public class ExportReportModelToCSV
         {
             logger.error("IOException while writing to output file! " + e.getLocalizedMessage());
         }
-        List<String[]> content = new ArrayList<String[]> ();
-        for (ReportModel report : result) {
-            content.add (report.getStringArray());
-        }
+        List<String[]> content = new ArrayList<String[]>(result);
         
         if (writer != null) {
             writer.writeAll(content, true);

@@ -42,7 +42,7 @@ public class CsvWindupExportLoader
 
     private char delimiter;
 
-    private HeaderColumnNameTranslateMappingStrategy<ReportModel> mappingStrategy;
+    private HeaderColumnNameTranslateMappingStrategy<String[]> mappingStrategy;
 
     public CsvWindupExportLoader(URL fileUrl, char delimiter) {
         this.fileToLoad = fileUrl;
@@ -51,20 +51,19 @@ public class CsvWindupExportLoader
     }
 
     private void setColumnPositionMappingStrategy() {
-        mappingStrategy = new HeaderColumnNameTranslateMappingStrategy<ReportModel>();
+        mappingStrategy = new HeaderColumnNameTranslateMappingStrategy<String[]>();
         mappingStrategy.setColumnMapping(mapping);
-        mappingStrategy.setType(ReportModel.class);
+//        mappingStrategy.setType(ReportModel.class);
     }
 
-    public List<ReportModel> parseCSV() {
+    public List<String[]> parseCSV() {
 
-        List<ReportModel> listOfReportModels = new ArrayList<ReportModel>();
+        List<String[]> listOfReportModels = new ArrayList<String[]>();
         String file = fileToLoad.getFile();
 
         try (CSVReader reader = new CSVReader(new FileReader(file), delimiter))
         {
-            CsvToBean<ReportModel> csv = new CsvToBean<ReportModel>();
-            listOfReportModels = csv.parse(mappingStrategy,reader);
+            listOfReportModels = reader.readAll();
         }
         catch (Exception e) {
             logger.error("Something wrong happened while loading CSV file " + e.getLocalizedMessage());

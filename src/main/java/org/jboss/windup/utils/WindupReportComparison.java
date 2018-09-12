@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jboss.windup.utils.model.ReportModel;
+import org.jboss.windup.utils.model.StringArrayModel;
 
 /**
  * @author mnovotny
@@ -21,19 +21,19 @@ public class WindupReportComparison
 
     public static final Logger logger = LogManager.getLogger(WindupReportComparison.class);
     
-    private List<ReportModel> originalReport;
+    private List<StringArrayModel> originalReport;
     
-    private List<ReportModel> newReport;
+    private List<StringArrayModel> newReport;
     
     
-    public List<ReportModel> compareNewAndOldReports() {
-        List<ReportModel> result = new ArrayList<ReportModel>();
+    public List<String[]> compareNewAndOldReports() {
+        List<StringArrayModel> result = new ArrayList<>();
         if (originalReport == null || newReport == null) {
             logger.debug("One of the reports is empty");
             return null;
         }
         
-        Set<ReportModel> intersect = new HashSet<ReportModel>(originalReport);
+        Set<StringArrayModel> intersect = new HashSet<>(originalReport);
         intersect.retainAll(newReport);
         logger.trace("Intersection has got " + intersect.size());
         
@@ -42,41 +42,39 @@ public class WindupReportComparison
         result.removeAll(intersect);
         logger.trace("Result has got " + result.size());
         
-        return result;
+        return StringArrayModel.fromStringArrayModelList(result);
     }
     
-    public List<ReportModel> compareNewAndOldReportsWithDiffLines() {
-        List<ReportModel> newReportDiff = new ArrayList<>();
-        List<ReportModel> oldReportDiff = new ArrayList<>();
-        
+    public List<String[]> compareNewAndOldReportsWithDiffLines() {
+
         if (originalReport == null || newReport == null) {
             logger.debug("One of the reports is empty");
             return null;
         }
         
-        Set<ReportModel> intersect = new HashSet<>(originalReport);
+        Set<StringArrayModel> intersect = new HashSet<>(originalReport);
         intersect.retainAll(newReport);
         logger.trace("Intersection has got " + intersect.size());
-        
-        newReportDiff.addAll(newReport);
+
+        List<StringArrayModel> newReportDiff = new ArrayList<>(newReport);
         logger.trace("Result has got " + newReportDiff.size());
         newReportDiff.removeAll(intersect);
         logger.trace("Result has got " + newReportDiff.size());
-        
-        oldReportDiff.addAll(originalReport);
+
+        List<StringArrayModel> oldReportDiff = new ArrayList<>(originalReport);
         logger.trace("Result has got " + oldReportDiff.size());
         oldReportDiff.removeAll(intersect);
         logger.trace("Result has got " + oldReportDiff.size());
         
-        List<ReportModel> diffedResult = new ArrayList<>();
+        List<StringArrayModel> diffedResult = new ArrayList<>();
         diffedResult.addAll(oldReportDiff);
         diffedResult.addAll(newReportDiff);
         
-        return diffedResult;
+        return StringArrayModel.fromStringArrayModelList(diffedResult);
     }    
 
-    public WindupReportComparison(List<ReportModel> oldList, List<ReportModel> newList) {
-        this.newReport = newList;
-        this.originalReport = oldList;
+    public WindupReportComparison(List<String[]> oldList, List<String[]> newList) {
+        this.newReport = StringArrayModel.fromStringArrayList(newList);
+        this.originalReport = StringArrayModel.fromStringArrayList(oldList);
     }
 }

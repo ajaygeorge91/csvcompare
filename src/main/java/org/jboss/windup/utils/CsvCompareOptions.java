@@ -47,6 +47,16 @@ public class CsvCompareOptions
     }
 
     public void parse (String[] args) throws Exception {
+        args = new String[]{
+                "-o",
+                "/home/ajaygeorge/Desktop/samp.csv",
+                "-n",
+                "/home/ajaygeorge/Desktop/samp_n.csv",
+//                "-b",
+                "-d",
+                ","
+        };
+
         CommandLineParser parser = new DefaultParser();
         if (args.length <=1){
             logger.error("Missing required arguments old-file and new-file");
@@ -57,7 +67,7 @@ public class CsvCompareOptions
         CommandLine line = parser.parse( getCMdOptions(), args );
         if ( line.hasOption('o')) {
             String oldFileOptionValue = line.getOptionValue("o");
-            if (validateExistingFile(oldFileOptionValue)) {
+            if (!validateExistingFile(oldFileOptionValue)) {
                 logger.error("file path in option old-file is wrong as file doesn't exist");
                 throw new IllegalArgumentException("file path in option old-file is wrong as file doesn't exist");
             }
@@ -66,7 +76,7 @@ public class CsvCompareOptions
         }
         if (line.hasOption('n')) {
             String newFileOptionValue = line.getOptionValue("n");
-            if (validateExistingFile(newFileOptionValue)) {
+            if (!validateExistingFile(newFileOptionValue)) {
                 logger.error("file path in option new-file is wrong as file doesn't exist");
                 throw new IllegalArgumentException("file path in option new-file is wrong as file doesn't exist");
             }
